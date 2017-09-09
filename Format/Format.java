@@ -33,7 +33,8 @@ public class Format {
     }
 
     public boolean compareToPunct(char c) {
-        if (c == DOT || c == COMMA || c == QUESTION || c == DASH || c == COLON || c == QUOTES || c == EXCLAMATION || c == SEMICOLON) {
+        if (c == DOT || c == COMMA || c == QUESTION || c == DASH || c == COLON
+                || c == QUOTES || c == EXCLAMATION || c == SEMICOLON) {
             return true;
         }
         return false;
@@ -54,5 +55,59 @@ public class Format {
     public void print() {
         for (int i = 0; i < wordNum; i++)
             System.out.println(Text[i]);
+    }
+
+    public void format(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName, false);
+        int currentWord = 0;
+        int firstWordInLine = 0;
+        final int NUM_WORDS_IN_LINE = 3;
+        while (firstWordInLine < wordNum) {
+            for (int i = firstWordInLine; i < firstWordInLine + NUM_WORDS_IN_LINE && i < wordNum; i++) {
+                char[] L = new char[Text[i].length()];
+                Text[i].getChars(0, Text[i].length(), L, 0);
+                for (int j = 0; j < L.length; j++) {
+                    if ((L[j] >= A_SMALL_CODE && L[j] <= A_SMALL_CODE + MAX_LETTER_NUMBER - 1)
+                            || (L[j] >= A_BIG_CODE && L[j] <= A_BIG_CODE + MAX_LETTER_NUMBER - 1)) {
+                        writer.write("  ");
+                    }
+                    writer.write(L[j]);
+                }
+                writer.write("  ");
+            }
+            writer.write("\r\n");
+            writer.write("");
+            for (int i = firstWordInLine; i < firstWordInLine + NUM_WORDS_IN_LINE && i < wordNum; i++) {
+                char[] L = new char[Text[i].length()];
+                Text[i].getChars(0, Text[i].length(), L, 0);
+                for (int j = 0; j < L.length; j++) {
+                    if ((L[j] >= A_SMALL_CODE && L[j] <= A_SMALL_CODE + MAX_LETTER_NUMBER - 1)
+                            || (L[j] >= A_BIG_CODE && L[j] <= A_BIG_CODE + MAX_LETTER_NUMBER - 1)) {
+                        if (L[j] < A_SMALL_CODE) {
+                            if ((L[j] - A_BIG_CODE + 1 )/ 10 < 1) {
+                                writer.write("  ");
+                            } else {
+                                writer.write(" ");
+                            }
+                            writer.write(""+(0 + L[j] - A_BIG_CODE + 1));
+                        }
+                        else {
+                            if ((L[j] - A_SMALL_CODE + 1 )/ 10 < 1) {
+                                writer.write("  ");
+                            } else {
+                                writer.write(" ");
+                            }
+                            writer.write("" + (0 + L[j] - A_SMALL_CODE + 1));
+                        }
+                    } else
+                        writer.write(" ");
+                }
+                writer.write("  ");
+            }
+            writer.write("\r\n");
+            firstWordInLine += NUM_WORDS_IN_LINE;
+            currentWord += NUM_WORDS_IN_LINE;
+        }
+        writer.close();
     }
 }
