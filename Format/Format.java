@@ -98,7 +98,6 @@ public class Format {
                 writer.write("  ");
             }
             writer.write("\r\n");
-            writer.write("");
             for (int i = firstWordInLine; i < firstWordInLine + NUM_WORDS_IN_LINE && i < wordNum; i++) {
                 char[] L = new char[Text[i].length()];
                 Text[i].getChars(0, Text[i].length(), L, 0);
